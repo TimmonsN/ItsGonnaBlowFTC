@@ -1,2 +1,2 @@
-# ItsGonnaBlowFTC
-Its Gonna Blow FTC team code
+# Ben Branch Extraordinaire 
+Behold: Ben's Branch Emporium
