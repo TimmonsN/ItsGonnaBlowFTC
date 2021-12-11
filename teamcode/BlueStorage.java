@@ -1,5 +1,5 @@
 package org.firstinspires.ftc.teamcode;
-
+//ben's version
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.hardware.bosch.BNO055IMU;
@@ -167,7 +167,7 @@ public class BlueStorage extends LinearOpMode{
         telemetry.addData("start", "move");
         telemetry.update();
         double Multiplyer;
-        double division;
+        double end;
         double start;
         double Multiplyer2;
         double power = 1;
@@ -192,35 +192,37 @@ public class BlueStorage extends LinearOpMode{
         frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        division = Math.ceil((ticCount / 2.0) * 1);
+        end = Math.ceil(ticCount / 2.0);
         start = Math.ceil(ticCount / 4.0);
-        //Multiplyer = speed / (ticCount - division);
-        //Multiplyer2 = speed / start;
+        //Multiplier = speed / (ticCount - end);
+        //Multiplier2 = speed / start;
         backLeft.setTargetPosition(ticCount * direction);
         backRight.setTargetPosition(ticCount * direction);
         frontRight.setTargetPosition(ticCount * direction);
         frontLeft.setTargetPosition(ticCount * direction);
       
-          while (!backLeft.isBusy()) { 
+          while (!backRight.isBusy()) { 
           sleep(1);
           telemetry.addData("Stuck", "");
           telemetry.update();
         }
-        while (backLeft.isBusy() && Math.abs(power) > 0.09) {
-           if ((backLeft.getCurrentPosition() * direction) <= start) {
-                power = (Math.abs((backLeft.getCurrentPosition())) * (speed/start));
+        while (backRight.isBusy() && Math.abs(power) >= 0.1) {
+           if ((backRight.getCurrentPosition() * direction) <= start) {
+                power = (Math.abs((backRight.getCurrentPosition())) * (speed/start));
                 power += .1;
-            } else if ((Math.abs(backLeft.getCurrentPosition())) >= division) {
-                power = speed * ((ticCount - backLeft.getCurrentPosition()* direction) / division);
+            } else if ((Math.abs(backRight.getCurrentPosition())) >= end) {
+                power = speed * ((ticCount - (backRight.getCurrentPosition()* direction)) / end);
                 power += .1;
             } else {
-                power = (speed);
+                power = speed;
             }
             frontRight.setPower(power * direction);
             frontLeft.setPower(power * direction);
             backLeft.setPower(power * direction);
             backRight.setPower(power * direction);
             telemetry.addData("power", power);
+            telemetry.addLine;
+            telemetry.addData("TickCount", ticCount);
             telemetry.update();
         }
         frontRight.setPower(0);
@@ -242,7 +244,7 @@ public class BlueStorage extends LinearOpMode{
       // pseudo 
       power = speed * ((distance from end) / (halfway))
       
-      power = speed * ((ticCount - (backLeft.getCurrentPosition()) / division)
+      power = speed * ((ticCount - (backLeft.getCurrentPosition()) / end)
       power += .1
       
       // What you have
@@ -299,7 +301,7 @@ private void rotate(int turn) {
         telemetry.addData("start", "strafe");
         telemetry.update();
         double Multiplyer;
-        double division;
+        double end;
         double start;
         double Multiplyer2;
         double power = 1;
@@ -324,35 +326,37 @@ private void rotate(int turn) {
         frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        division = Math.ceil((ticCount / 2.0) * 1);
+        end = Math.ceil(ticCount / 2.0);
         start = Math.ceil(ticCount / 4.0);
-        //Multiplyer = speed / (ticCount - division);
-        //Multiplyer2 = speed / start;
+        //Multiplier = speed / (ticCount - end);
+        //Multiplier2 = speed / start;
         backLeft.setTargetPosition(-ticCount * direction);
         backRight.setTargetPosition(ticCount * direction);
         frontRight.setTargetPosition(-ticCount * direction);
         frontLeft.setTargetPosition(ticCount * direction);
       
-        while (!backRight.isBusy()) { 
+          while (!backRight.isBusy()) { 
           sleep(1);
           telemetry.addData("Stuck", "");
           telemetry.update();
         }
-        while (backRight.isBusy()) {
+        while (backRight.isBusy() && Math.abs(power) >= 0.1) {
            if ((backRight.getCurrentPosition() * direction) <= start) {
-                power = ((backRight.getCurrentPosition() * direction) * (speed/start));
+                power = (Math.abs((backRight.getCurrentPosition())) * (speed/start));
                 power += .1;
-            } else if ((backRight.getCurrentPosition() * direction) >= division) {
-                power = speed * ((ticCount - backRight.getCurrentPosition()* direction) / division);
+            } else if ((Math.abs(backRight.getCurrentPosition())) >= end) {
+                power = speed * ((ticCount - (backRight.getCurrentPosition()* direction)) / end);
                 power += .1;
             } else {
-                power = (speed);
+                power = speed;
             }
             frontRight.setPower(power * direction);
             frontLeft.setPower(power * direction);
             backLeft.setPower(power * direction);
             backRight.setPower(power * direction);
             telemetry.addData("power", power);
+            telemetry.addLine;
+            telemetry.addData("TickCount", ticCount);
             telemetry.update();
         }
         frontRight.setPower(0);
