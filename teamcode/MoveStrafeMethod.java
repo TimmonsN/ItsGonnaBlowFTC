@@ -53,6 +53,7 @@
                 power = speed;
             }
 
+           //boom?
             if (!ticCount - (Math.abs(backRight.getCurrentPosition())) == 0 && power < 0.1){
                 power = 0.1;
             }
