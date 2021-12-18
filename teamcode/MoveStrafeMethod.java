@@ -54,7 +54,7 @@
             }
 
            //boom?
-            if (!ticCount - (Math.abs(backRight.getCurrentPosition())) == 0 && power < 0.1){
+            if (!ticCount == (Math.abs(backRight.getCurrentPosition())) && power < 0.1){
                 power = 0.1;
             }
             frontRight.setPower(power * direction);
@@ -190,6 +190,9 @@ private void rotate(int turn) {
                 power += .1;
             } else {
                 power = speed;
+            }
+            if (!ticCount == (Math.abs(backRight.getCurrentPosition())) && power < 0.1){
+                power = 0.1;
             }
             frontRight.setPower(power * direction);
             frontLeft.setPower(power * direction);
