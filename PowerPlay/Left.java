@@ -129,17 +129,13 @@ public class Left extends LinearOpMode{
         strafe(.5, 17);
         move(.75, -24);
         strafe(.5, 36);
-        move(.25, 5);
         //place
-        move(.25, -.5);
         strafe(.5, 12);
         move(.75, 60);
         //new cone
         move(.75, -60);
         strafe(.5, -12);
-        move(.25, 5);
         //place
-        move(.25, -.5);
         strafe(.5, 12);
         if(x.equals("LEFT")){
             telemetry.addData("Analysis", 1);
@@ -585,19 +581,17 @@ private void rotate(int turn) {
        }
        
     }
-    
+    */
     public void place(){
-        clamp.setPosition(.5);
-        sleep(500);
-        move(.25,5);
-        clamp.setPosition(0);
-        arm.setTargetPosition(0);
-        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        bucket.setPosition(1);
-        arm.setPower(0.7);
+        linearSlide.setPower(0);
+        linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        linearSlide.setTargetPosition(0);//find number for up
+        move(.25, 5);
+        probe.setPosition(0);//find number for release
+        move(.25, -5);//find number for down
         
     }
-*/
     
     
     
