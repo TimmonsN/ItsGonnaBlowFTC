@@ -39,6 +39,7 @@ public class Left extends LinearOpMode{
   private BNO055IMU RevIMUAsBNO055IMU;
   private ElapsedTime runtime = new ElapsedTime();
   private ElapsedTime colorWait = new ElapsedTime();
+  
 
     OpenCvInternalCamera phoneCam;
     FreightDeterminationPipeline pipeline;
@@ -75,6 +76,8 @@ public class Left extends LinearOpMode{
         phoneCam.setPipeline(pipeline);
         int count = 0;
         String x = "";
+        double slideTicks = 0;
+        double  probePosition = 0;
 
         // We set the viewport policy to optimized view so the preview doesn't appear 90 deg
         // out when the RC activity is in portrait. We do our actual image processing assuming
@@ -129,13 +132,13 @@ public class Left extends LinearOpMode{
         strafe(.5, 17);
         move(.75, -24);
         strafe(.5, 36);
-        //place
+        place(5);
         strafe(.5, 12);
         move(.75, 60);
         //new cone
         move(.75, -60);
         strafe(.5, -12);
-        //place
+        place(5);
         strafe(.5, 12);
         if(x.equals("LEFT")){
             telemetry.addData("Analysis", 1);
@@ -582,14 +585,15 @@ private void rotate(int turn) {
        
     }
     */
-    public void place(){
+    public void place(double distance){
         linearSlide.setPower(0);
         linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         linearSlide.setTargetPosition(0);//find number for up
-        move(.25, 5);
+        move(.25, distance);
         probe.setPosition(0);//find number for release
-        move(.25, -5);//find number for down
+        move(.25, -distance);
+        linearSlide.setTargetPosition(0);//find number for down
         
     }
     
