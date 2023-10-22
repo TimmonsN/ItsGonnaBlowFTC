@@ -30,18 +30,19 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 @Autonomous
 
 
-public class Left extends LinearOpMode{
+
+public class AutoR_Copy3 extends LinearOpMode{
   private DcMotor frontLeft;
   private DcMotor backRight;
   private DcMotor frontRight;
   private DcMotor backLeft;
   private DcMotor linearSlide;
+  private DcMotor linearSlide1;
   private Servo probe;
   private BNO055IMU RevIMUAsBNO055IMU;
   private ElapsedTime runtime = new ElapsedTime();
   private ElapsedTime colorWait = new ElapsedTime();
   
-
     OpenCvInternalCamera phoneCam;
     FreightDeterminationPipeline pipeline;
 
@@ -54,6 +55,7 @@ public class Left extends LinearOpMode{
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
         linearSlide = hardwareMap.get(DcMotor.class, "linearSlide");
+        linearSlide1 = hardwareMap.get(DcMotor.class, "linearSlide1");
         probe = hardwareMap.get(Servo.class, "probe");
         RevIMUAsBNO055IMU = hardwareMap.get(BNO055IMU.class, "imu");
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -61,8 +63,11 @@ public class Left extends LinearOpMode{
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         linearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        linearSlide1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        linearSlide.setDirection(DcMotorSimple.Direction.REVERSE);
+        linearSlide1.setDirection(DcMotorSimple.Direction.REVERSE);
         
         /**
          * NOTE: Many comments have been omitted from this sample for the
@@ -77,8 +82,6 @@ public class Left extends LinearOpMode{
         phoneCam.setPipeline(pipeline);
         int count = 0;
         String x = "";
-        double slideTicks = 0;
-        double  probePosition = 0;
 
         // We set the viewport policy to optimized view so the preview doesn't appear 90 deg
         // out when the RC activity is in portrait. We do our actual image processing assuming
@@ -113,9 +116,10 @@ public class Left extends LinearOpMode{
         IMUParameters.loggingEnabled = false;
         // Initialize IMU.
         RevIMUAsBNO055IMU.initialize(IMUParameters);
-        
+
         waitForStart();
         linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        linearSlide1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         while (count < 25)
         {
             x = (pipeline.getAnalysis()).name();
@@ -127,43 +131,89 @@ public class Left extends LinearOpMode{
         }
         phoneCam.stopStreaming();
         phoneCam.closeCameraDevice();
-        probe.setPosition(0.16);
         sleep(1000);
-        linearSlide.setTargetPosition(2120);//find number for up
+        linearSlide.setTargetPosition(150);//find number for up
         linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        linearSlide1.setTargetPosition(-150);//find number for up
+        linearSlide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        linearSlide1.setPower(0.4);
+        linearSlide1.setPower(0.4);
+        probe.setPosition(0.16);
+        
+        strafe(.5, -7.5);
+        move(.75, -21);
+        linearSlide.setTargetPosition(850);//find number for up
+        linearSlide1.setTargetPosition(-850);
+        linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        linearSlide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         linearSlide.setPower(0.4);
-///*
-        strafe(.5, 7.5);
-        move(.75, -24.75);
-        strafe(.25, 20);
+        linearSlide1.setPower(0.4);
+      //  rotate(0);
+        strafe(.5, -40.9);
+        place(6);
+        strafe(.5, -14.75);
+        linearSlide.setTargetPosition(100);
+        linearSlide1.setTargetPosition(-100);
         rotate(0);
-        strafe(.5,20.5);
-        place(9);
+        linearSlide.setTargetPosition(420);//find number for up
+        linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        linearSlide1.setTargetPosition(-420);//find number for up
+        linearSlide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        linearSlide1.setPower(0.4);
+        linearSlide.setPower(0.4);
+        /*
+        move(.75, 46);
         rotate(0);
+        grab(420);
+        */
+        /*
+        linearSlide.setTargetPosition(0);
+        move(.75, 48);
+        grab(300);
+        move(.75, -48);
         strafe(.5, 12);
-        /*move(.75, 60);
-        //new cone
-        move(.75, -60);
+        place(5.3);
         strafe(.5, -12);
-        place(5);
-        strafe(.5, 12);*/
+        */
         if(x.equals("LEFT")){
             telemetry.addData("Analysis", 1);
             telemetry.update();
+            //rotate(0);
+            //move(.75,-43);
+            /*
+            rotate(0);
+            strafe(.5, 10);
+            place(6.4);
+            strafe(.5, -11.5);
+            move(.75, 2);
+            */
             //One Park
-            move(.75, 48);
+            
         }
         else if(x.equals("CENTER")){
             telemetry.addData("Analysis", 2);
             telemetry.update();
+            move(.5, 20);
+            //move(.75, -18);
+            /*
+            strafe(.5, 14.5);
+            move(.5, -1);
+            smallplace(4.3);
+            */
             //Two Park
-            move(.75, 22);
         }
         else if(x.equals("RIGHT")){
             telemetry.addData("Analysis", 3);
             telemetry.update();
+            move(.5, 46);
             //Three Park
-            move(.75,2);
+            //move(.1, 2);
+            /*
+            rotate(180);
+            move(.1, -6);
+            strafe(.5, -13.5);
+            smallplace(4);
+            */
         }
 //*/
     }
@@ -198,7 +248,7 @@ public class Left extends LinearOpMode{
         frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        division = Math.ceil((ticCount / 2.0) * 1);
+        division = Math.ceil(ticCount / 4.0);
         start = Math.ceil(ticCount / 4.0);
         //Multiplyer = speed / (ticCount - division);
         //Multiplyer2 = speed / start;
@@ -207,18 +257,20 @@ public class Left extends LinearOpMode{
         frontRight.setTargetPosition(ticCount * direction);
         frontLeft.setTargetPosition(ticCount * direction);
       
-          while (!backLeft.isBusy()) { 
+        /*  while (!backLeft.isBusy()) { 
           sleep(1);
           telemetry.addData("Stuck", "");
           telemetry.update();
-        }
+        } */
         while (backLeft.isBusy() && x < 150) {
            if ((backLeft.getCurrentPosition() * direction) <= start) {
                 power = (Math.abs((backLeft.getCurrentPosition())) * (speed/start));
                 power += .1;
             } else if ((Math.abs(backLeft.getCurrentPosition())) >= division) {
-                power = speed * ((ticCount - backLeft.getCurrentPosition()* direction) / division);
+                power = speed * ((ticCount - backLeft.getCurrentPosition()* direction) / (ticCount/4));
                 power += .1;
+                telemetry.addData("Slowing down", power);
+                telemetry.update();
             } else {
                 power = (speed);
             }
@@ -276,7 +328,6 @@ private void rotate(int turn) {
         double diff = 0;
         double rotatePower = 0;
         double angle = 0;
-
       backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
       frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
       frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -284,7 +335,6 @@ private void rotate(int turn) {
       
       for (int count = 0; count < 250; count++) {
         angles = RevIMUAsBNO055IMU.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-
         angle = angles.firstAngle;
        
         angleDiff = (turn) - angles.firstAngle;
@@ -296,8 +346,6 @@ private void rotate(int turn) {
         
         
         //power = ((-1 * Math.abs((angles.firstAngle)/(turn))) + 1);
-
-
         telemetry.addData("rot about Z", angles.firstAngle);
         telemetry.update();
         
@@ -357,7 +405,6 @@ private void rotate(int turn) {
                 count = 100000;
             }
         }
-
       }
         frontRight.setPower(0);
         frontLeft.setPower(0);
@@ -458,7 +505,7 @@ private void rotate(int turn) {
         frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        division = Math.ceil((ticCount / 2.0) * 1);
+        division = Math.ceil((ticCount / 4.0) * 1);
         start = Math.ceil(ticCount / 4.0);
         //Multiplyer = speed / (ticCount - division);
         //Multiplyer2 = speed / start;
@@ -477,7 +524,7 @@ private void rotate(int turn) {
                 power = ((backRight.getCurrentPosition() * direction) * (speed/start));
                 power += .1;
             } else if ((backRight.getCurrentPosition() * direction) >= division) {
-                power = speed * ((ticCount - backRight.getCurrentPosition()* direction) / division);
+                power = speed * ((ticCount - backRight.getCurrentPosition()* direction) / (ticCount / 4));
                 power += .1;
             } else {
                 power = (speed);
@@ -593,43 +640,105 @@ private void rotate(int turn) {
        
     }
     */
-    public void place(double distance){
+    public void WFS(){//WFS wait for slide
+        while (linearSlide.isBusy() || linearSlide1.isBusy()) { 
+          sleep(1);
+          telemetry.addData("Sliding", "");
+          telemetry.update();
+        }
+    }
+    
+    public void grab(int distance){
+        probe.setPosition(0.0);
+        sleep(500);
         linearSlide.setPower(0);
-        linearSlide.setTargetPosition(1890);//find number for up
+        linearSlide.setTargetPosition(distance + 500);
         linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        linearSlide.setPower(0.4);
-        telemetry.addData("ticks", linearSlide.getCurrentPosition());
-        telemetry.update();
-        sleep(2000);
-        move(.25, distance);
-        sleep(3000);
-        telemetry.addData("ticks", linearSlide.getCurrentPosition());
-        telemetry.update();
-        linearSlide.setTargetPosition(1790);//find number for up
+        linearSlide1.setPower(0);
+        linearSlide1.setTargetPosition(-(distance + 500));
+        linearSlide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        linearSlide.setPower(0.85);
+        linearSlide1.setPower(0.85);
+        WFS();
+        move(.1, 8);
+        sleep(500);
+        linearSlide.setTargetPosition(distance);
         linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        linearSlide.setPower(0.4);
-        probe.setPosition(0);//find number for release
+        linearSlide1.setTargetPosition(-distance);
+        linearSlide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        linearSlide.setPower(0.6);
+        linearSlide1.setPower(0.6);
+        WFS();
         sleep(1000);
-        move(1,2);
-        move(1,-2);
-        sleep(2000);
-        linearSlide.setTargetPosition(1890);//find number for up
+        probe.setPosition(.16);
+        sleep(500);
+        linearSlide.setTargetPosition(distance + 500);
         linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        linearSlide.setPower(0.4);
+        linearSlide1.setTargetPosition(-(distance + 500));
+        linearSlide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        linearSlide.setPower(0.85);
+        linearSlide1.setPower(0.85);
+        WFS();
+        move(.1, -8);
+        linearSlide.setTargetPosition(100);//find number for down
+        linearSlide.setTargetPosition(-100);
+    }
+    
+    public void smallplace(double distance){
+        linearSlide.setPower(0);
+        linearSlide.setTargetPosition(1200);//find number for up
+        linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        linearSlide1.setPower(0);
+        linearSlide1.setTargetPosition(-1200);//find number for up
+        linearSlide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        linearSlide.setPower(0.85);
+        linearSlide1.setPower(0.85);
         telemetry.addData("ticks", linearSlide.getCurrentPosition());
         telemetry.update();
+        WFS();
+        move(.25, distance);
+        sleep(500);
+        probe.setPosition(0);//find number for release
+        sleep(500);
         move(.25, -distance);
         telemetry.addData("ticks", linearSlide.getCurrentPosition());
         telemetry.update();
         linearSlide.setTargetPosition(0);//find number for down
-        
+        linearSlide1.setTargetPosition(0);
+         
     }
+
+    
+    public void place(double distance){
+        linearSlide.setPower(0);
+        linearSlide.setTargetPosition(1600);//find number for up
+        linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        linearSlide1.setPower(0);
+        linearSlide1.setTargetPosition(-1600);//find number for up
+        linearSlide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        linearSlide.setPower(0.85);
+        linearSlide1.setPower(0.85);
+        telemetry.addData("ticks", linearSlide.getCurrentPosition());
+        telemetry.update();
+        WFS();
+        move(.25, distance);
+        sleep(2000);
+        probe.setPosition(0);//find number for release
+        sleep(500);
+        move(.25, -distance);
+        telemetry.addData("ticks", linearSlide.getCurrentPosition());
+        telemetry.update();
+        linearSlide.setTargetPosition(0);//find number for down
+        linearSlide1.setTargetPosition(0);
+         
+    }
+
     
     
     
     
 
-       public static class FreightDeterminationPipeline extends OpenCvPipeline {
+    public static class FreightDeterminationPipeline extends OpenCvPipeline {
         /*
          * An enum to define the Freight position
          */
@@ -662,11 +771,11 @@ private void rotate(int turn) {
         /*
          * The core values which define the location and size of the sample regions
          */
-        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(135,58);
+        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(120,58);
         static final Point REGION2_TOPLEFT_ANCHOR_POINT = new Point(150,58);
         static final Point REGION3_TOPLEFT_ANCHOR_POINT = new Point(260,58);
-        static final int REGION_WIDTH = 20;
-        static final int REGION_HEIGHT = 20;
+        static final int REGION_WIDTH = 40;
+        static final int REGION_HEIGHT = 40;
         
         double yelPercent;
         double cyaPercent;

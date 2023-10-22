@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.hardware.bosch.BNO055IMU;
@@ -28,7 +29,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 @Autonomous
-
+@Disabled
 
 
 public class Right extends LinearOpMode{
@@ -126,14 +127,20 @@ public class Right extends LinearOpMode{
         phoneCam.stopStreaming();
         phoneCam.closeCameraDevice();
         probe.setPosition(0.5);
+        sleep(500);
+        linearSlide.setPower(.3);
         
-
+boolean notPlacing = true;
 ///*
-        strafe(.5, 17);
+    //    if(notPlacing == true) {
+    //      linearSlide.setMode(DcMotor.RunMode_RUN_TO_POSITION);
+    //      linearSlide.setTargetPosition(200);
+    //   }
+        strafe(.5, 8.5);
         move(.75, 24);
-        rotate(-165);
+        rotate(-177);
         strafe(.5, -36);
-        place(5);
+        place(7);
         strafe(.5, -12);
         /*move(.75, 60);
         //new cone
@@ -270,7 +277,6 @@ private void rotate(int turn) {
         double diff = 0;
         double rotatePower = 0;
         double angle = 0;
-
       backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
       frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
       frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -278,7 +284,6 @@ private void rotate(int turn) {
       
       for (int count = 0; count < 250; count++) {
         angles = RevIMUAsBNO055IMU.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-
         angle = angles.firstAngle;
        
         angleDiff = (turn) - angles.firstAngle;
@@ -290,8 +295,6 @@ private void rotate(int turn) {
         
         
         //power = ((-1 * Math.abs((angles.firstAngle)/(turn))) + 1);
-
-
         telemetry.addData("rot about Z", angles.firstAngle);
         telemetry.update();
         
@@ -351,7 +354,6 @@ private void rotate(int turn) {
                 count = 100000;
             }
         }
-
       }
         frontRight.setPower(0);
         frontLeft.setPower(0);
@@ -587,7 +589,7 @@ private void rotate(int turn) {
        
     }
     */
-    public void place(){
+    public void place(double distance){
         linearSlide.setPower(0);
         linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -627,7 +629,7 @@ private void rotate(int turn) {
         static final Scalar upper_yellow_bounds = new Scalar(255, 255, 200, 255);
         static final Scalar lower_cyan_bounds = new Scalar(0, 0, 100, 255);
         static final Scalar upper_cyan_bounds = new Scalar(200, 255, 255, 255);
-        static final Scalar lower_magenta_bounds = new Scalar(100, 0, 0, 255);
+        static final Scalar lower_magenta_bounds = new Scalar(100, 0, 30, 255);
         static final Scalar upper_magenta_bounds = new Scalar(255, 200, 255, 255);
         static final Scalar YELLOW = new Scalar(255, 255, 0);
         static final Scalar CYAN = new Scalar(0, 255, 255);
@@ -637,18 +639,18 @@ private void rotate(int turn) {
         /*
          * The core values which define the location and size of the sample regions
          */
-        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(150,58);
+        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(135,58);
         static final Point REGION2_TOPLEFT_ANCHOR_POINT = new Point(150,58);
         static final Point REGION3_TOPLEFT_ANCHOR_POINT = new Point(260,58);
-        static final int REGION_WIDTH = 20;
-        static final int REGION_HEIGHT = 20;
+        static final int REGION_WIDTH = 40;
+        static final int REGION_HEIGHT = 40;
         
         double yelPercent;
         double cyaPercent;
         double magPercent;
         
         Point sleeve_pointA = new Point(REGION1_TOPLEFT_ANCHOR_POINT.x, REGION1_TOPLEFT_ANCHOR_POINT.y);
-        Point sleeve_pointB = new Point(REGION1_TOPLEFT_ANCHOR_POINT.x + 20, REGION1_TOPLEFT_ANCHOR_POINT.y + 20);
+        Point sleeve_pointB = new Point(REGION1_TOPLEFT_ANCHOR_POINT.x + 35, REGION1_TOPLEFT_ANCHOR_POINT.y + 35);
             
         Point region1_pointA = new Point(
                 REGION1_TOPLEFT_ANCHOR_POINT.x,

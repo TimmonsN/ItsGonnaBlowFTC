@@ -1,0 +1,31 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+
+@TeleOp(name = "EncoderTest (Blocks to Java)")
+@Disabled
+public class EncoderTest extends LinearOpMode {
+
+  private DcMotor backLeft;
+
+  /**
+   * This function is executed when this Op Mode is selected from the Driver Station.
+   */
+  @Override
+  public void runOpMode() {
+    backLeft = hardwareMap.get(DcMotor.class, "backLeft");
+
+    // Put initialization blocks here.
+    waitForStart();
+    if (opModeIsActive()) {
+      while (opModeIsActive()) {
+        // Put run blocks here.
+        telemetry.addData("key", backLeft.getCurrentPosition());
+        telemetry.update();
+      }
+    }
+  }
+}
