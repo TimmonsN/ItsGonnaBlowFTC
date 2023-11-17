@@ -17,9 +17,10 @@ public class Tele extends LinearOpMode {
   private DcMotor backRight;
   private DcMotor frontRight;
   private DcMotor backLeft;
-  private DcMotor linearSlideLeft;
-  private DcMotor linearSlideRight;
- // private DcMotor fourBar;
+  private DcMotor slideLeft;
+  private DcMotor slideRight;
+  private DcMotor intake;
+  private DcMotor fly;
   private Servo bucket;
   private Servo plane;
   private Servo intakePush;
@@ -34,16 +35,16 @@ public class Tele extends LinearOpMode {
         backRight = hardwareMap.get(DcMotor.class, "backright");
         frontRight = hardwareMap.get(DcMotor.class, "frontright");
         backLeft = hardwareMap.get(DcMotor.class, "backleft");
-        linearSlideLeft = hardwareMap.get(DcMotor.class, "slideleft");
-        linearSlideRight = hardwareMap.get(DcMotor.class, "slideright");
+        slideLeft = hardwareMap.get(DcMotor.class, "slideleft");
+        slideRight = hardwareMap.get(DcMotor.class, "slideright");
         intake = hardwareMap.get(DcMotor.class, "intake");
         fly = hardwareMap.get(DcMotor.class, "fly");
-        intakePush = hardwareMap.get(Servo.class, "intakePush"); 
+        intakePush = hardwareMap.get(Servo.class, "intakepush"); 
         plane = hardwareMap.get(Servo.class, "plane"); 
         bucket = hardwareMap.get(Servo.class, "bucket"); 
         RevIMUAsBNO055IMU = hardwareMap.get(BNO055IMU.class, "imu");
-        linearSlideLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        linearSlideRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        slideLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        slideRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -52,12 +53,12 @@ public class Tele extends LinearOpMode {
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        linearSlideLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        linearSlideRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);  
-        linearSlideLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        linearSlideRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        slideLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slideRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);  
+        slideLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        slideRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         
-       // int minimum = linearSlideLeft.getCurrentPosition();
+       // int minimum = slideLeft.getCurrentPosition();
 
 //VARIABLES:
     
@@ -110,24 +111,24 @@ public class Tele extends LinearOpMode {
             backLeft.setPower(((gamepad1.left_stick_y + gamepad1.left_stick_x) - gamepad1.right_stick_x) * 0.3);
         }
 //slides always have same power
-      linearSlideRight.setPower(linearSlideLeft.getPower());
+      slideRight.setPower(slideLeft.getPower());
         
 //manual sliding
       if (!gamepad2.x) {
-        linearSlideLeft.setPower((1 * gamepad2.left_stick_y));
+        slideLeft.setPower((1 * gamepad2.left_stick_y));
       }
       else if (gamepad2.x) {
-        linearSlideLeft.setPower((0.33 * (gamepad2.left_stick_y)));
+        slideLeft.setPower((0.33 * (gamepad2.left_stick_y)));
       }
-    // if (linearSlideLeft.getCurrentPosition() < minimum) {
-      // linearSlideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-       //linearSlideLeft.setTargetPosition(minimum);
+    // if (slideLeft.getCurrentPosition() < minimum) {
+      // slideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+       //slideLeft.setTargetPosition(minimum);
      //}
      
      
 //telemetry
-        telemetry.addData("linearSlideLeft pos: ", linearSlideLeft.getCurrentPosition());
-        telemetry.addData("linearSlideLeft pow: ", linearSlideLeft.getPower());
+        telemetry.addData("slideLeft pos: ", slideLeft.getCurrentPosition());
+        telemetry.addData("slideLeft pow: ", slideLeft.getPower());
         telemetry.addData("bucket position:", bucket.getPosition());
         telemetry.addData("right stick:", gamepad2.right_stick_y);
         telemetry.update();
@@ -174,9 +175,9 @@ public class Tele extends LinearOpMode {
        /* if(gamepad2.dpad_left && (controlled == false)){
           armCounter1++;
           if(armCounter1 == 1){
-            linearSlideLeft.setTargetPosition(low);
-            linearSlideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            linearSlideLeft.setPower(0.3);
+            slideLeft.setTargetPosition(low);
+            slideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            slideLeft.setPower(0.3);
           }
         }
         else if(!gamepad2.dpad_left) {
@@ -186,9 +187,9 @@ public class Tele extends LinearOpMode {
         if(gamepad2.dpad_up && (controlled == false)){
           armCounter2++;
           if(armCounter2 == 1){ 
-            linearSlideLeft.setTargetPosition(mid);
-            linearSlideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            linearSlideLeft.setPower(0.3);
+            slideLeft.setTargetPosition(mid);
+            slideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            slideLeft.setPower(0.3);
           }
         }
         else if(!gamepad2.dpad_up) {
@@ -198,9 +199,9 @@ public class Tele extends LinearOpMode {
         if(gamepad2.dpad_right && (controlled == false)){
           armCounter3++;
           if(armCounter3 == 1){ 
-            linearSlideLeft.setTargetPosition(low);
-            linearSlideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            linearSlideLeft.setPower(0.3);
+            slideLeft.setTargetPosition(low);
+            slideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            slideLeft.setPower(0.3);
           }
         }
         else if(!gamepad2.dpad_right) {
@@ -210,9 +211,9 @@ public class Tele extends LinearOpMode {
         if(gamepad2.dpad_down && (controlled == false)) {
           armCounter4++;
           if(armCounter4 == 1){ 
-            linearSlideLeft.setTargetPosition(bottom);
-            linearSlideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            linearSlideLeft.setPower(0.3);
+            slideLeft.setTargetPosition(bottom);
+            slideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            slideLeft.setPower(0.3);
           }
         }
         else if(!gamepad2.dpad_down) {
@@ -224,7 +225,7 @@ public class Tele extends LinearOpMode {
           pwr = diff / 100;
           telemetry.addData("Power", pwr);
           telemetry.update();
-          linearSlideLeft.setPower(pwr);
+          slideLeft.setPower(pwr);
         } */
           
       } // while OpModeActive

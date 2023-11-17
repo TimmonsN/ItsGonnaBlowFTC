@@ -35,17 +35,15 @@ public class BlueBack extends LinearOpMode{
   private DcMotor backRight;
   private DcMotor frontRight;
   private DcMotor backLeft;
-  private DcMotor linearSlideLeft;
-  private DcMotor linearSlideRight;
- // private DcMotor fourBar;
+  private DcMotor slideLeft;
+  private DcMotor slideRight;
+  private DcMotor intake;
+  private DcMotor fly;
   private Servo bucket;
   private Servo plane;
   private Servo intakePush;
   private BNO055IMU RevIMUAsBNO055IMU;
   
-
-    OpenCvInternalCamera phoneCam;
-    FreightDeterminationPipeline pipeline;
 
     @Override
     public void runOpMode()
@@ -54,16 +52,16 @@ public class BlueBack extends LinearOpMode{
         backRight = hardwareMap.get(DcMotor.class, "backright");
         frontRight = hardwareMap.get(DcMotor.class, "frontright");
         backLeft = hardwareMap.get(DcMotor.class, "backleft");
-        linearSlideLeft = hardwareMap.get(DcMotor.class, "slideleft");
-        linearSlideRight = hardwareMap.get(DcMotor.class, "slideright");
+        slideLeft = hardwareMap.get(DcMotor.class, "slideleft");
+        slideRight = hardwareMap.get(DcMotor.class, "slideright");
         intake = hardwareMap.get(DcMotor.class, "intake");
         fly = hardwareMap.get(DcMotor.class, "fly");
         intakePush = hardwareMap.get(Servo.class, "intakePush"); 
         plane = hardwareMap.get(Servo.class, "plane"); 
         bucket = hardwareMap.get(Servo.class, "bucket"); 
         RevIMUAsBNO055IMU = hardwareMap.get(BNO055IMU.class, "imu");
-        linearSlideLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        linearSlideRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        slideLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        slideRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -72,15 +70,13 @@ public class BlueBack extends LinearOpMode{
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        linearSlideLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        linearSlideRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);  
-        linearSlideLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        linearSlideRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        slideLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slideRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);  
+        slideLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        slideRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
         double slideTicks = 0;
-        double  probePosition = 0;
-
         BNO055IMU.Parameters IMUParameters;
 
         // Put initialization blocks here.
@@ -102,28 +98,20 @@ public class BlueBack extends LinearOpMode{
             move(.75, -24);
             strafe(.5,-24);
             linePlace();
-            //backup
-            //board place
-            //strafe to park
+            boardPlace(-24);
         }
         else if(//center){
-            //strafe
-            //rotate
-            //move
-            //line place
-            //rotate
-            //backup
-            //board place
-            //stafe
+            strafe(.5, -7.5);
+            rotate(90);
+            move(.5, 24);
+            linePlace();
+            rotate(180);
+            boardPlace(-40);
         }
         else if(//right){
-            //strafe
-            //move forward
-            //line place
-            //backup
-            //board place
-            //strafe
-
+            strafe(.5, 48);
+            linePlace();
+            boardPlace(-48);
         }
 //*/
     }
@@ -138,22 +126,22 @@ public class BlueBack extends LinearOpMode{
     public void boardPlace(int dist){
         //tick count of up pos
         int x = 1800;
-        linearSlideLeft.setPower(0);
-        linearSlideRight.setPower(0);
-        linearSlideLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        linearSlideRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        linearSlideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        linearSlideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        linearSlideLeft.setTargetPosition(x);
-        linearSlideRight.setTargetPosition(x);
-        linearSlideLeft.setPower(.5);
-        linearSlideRight.setPower(.5);
+        slideLeft.setPower(0);
+        slideRight.setPower(0);
+        slideLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slideRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slideLeft.setTargetPosition(x);
+        slideRight.setTargetPosition(x);
+        slideLeft.setPower(.5);
+        slideRight.setPower(.5);
         move(.25, dist);
-        while (linearSlideLeft.isBusy()) { 
+        while (slideLeft.isBusy()) { 
           sleep(1);
         }
-        linearSlideLeft.setPower(0);
-        linearSlideRight.setPower(0);
+        slideLeft.setPower(0);
+        slideRight.setPower(0);
         //find dump pos
         bucket.setPosition();
         sleep(2000);
