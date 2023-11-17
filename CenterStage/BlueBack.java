@@ -64,6 +64,7 @@ public class BlueBack extends LinearOpMode{
         RevIMUAsBNO055IMU = hardwareMap.get(BNO055IMU.class, "imu");
         linearSlideLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         linearSlideRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -75,44 +76,11 @@ public class BlueBack extends LinearOpMode{
         linearSlideRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);  
         linearSlideLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         linearSlideRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        
-        /**
-         * NOTE: Many comments have been omitted from this sample for the
-         * sake of conciseness. If you're just starting out with EasyOpenCv,
-         * you should take a look at {@link InternalCamera1Example} or its
-         * webcam counterpart, {@link WebcamExample} first.
-         */
 
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        phoneCam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
-        pipeline = new FreightDeterminationPipeline();
-        phoneCam.setPipeline(pipeline);
-        int count = 0;
-        String x = "";
+
         double slideTicks = 0;
         double  probePosition = 0;
 
-        // We set the viewport policy to optimized view so the preview doesn't appear 90 deg
-        // out when the RC activity is in portrait. We do our actual image processing assuming
-        // landscape orientation, though.
-        phoneCam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
-
-        phoneCam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
-        {
-            @Override
-            public void onOpened()
-            {
-                phoneCam.startStreaming(320,240, OpenCvCameraRotation.SIDEWAYS_LEFT);
-            }
-
-            @Override
-            public void onError(int errorCode)
-            {
-                /*
-                 * This will be called if the camera could not be opened
-                 */
-            }
-        });
         BNO055IMU.Parameters IMUParameters;
 
         // Put initialization blocks here.
@@ -125,61 +93,75 @@ public class BlueBack extends LinearOpMode{
         IMUParameters.loggingEnabled = false;
         // Initialize IMU.
         RevIMUAsBNO055IMU.initialize(IMUParameters);
-        
-        waitForStart();
-        linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        while (count < 25)
-        {
-            x = (pipeline.getAnalysis()).name();
-            telemetry.addData("Analysis", x);
-            telemetry.update();
-            // Don't burn CPU cycles busy-looping in this sample
-            sleep(50);
-            count++;
-        }
-        phoneCam.stopStreaming();
-        phoneCam.closeCameraDevice();
-        probe.setPosition(0.16);
-        sleep(1000);
-        linearSlide.setTargetPosition(2120);//find number for up
-        linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        linearSlide.setPower(0.4);
+
+        //find pos
+        intakePush.setPosition();
 ///*
-        strafe(.5, 7.5);
-        move(.75, -24.75);
-        strafe(.25, 20);
-        rotate(0);
-        strafe(.5,20.5);
-        place(9);
-        rotate(0);
-        strafe(.5, 12);
-        /*move(.75, 60);
-        //new cone
-        move(.75, -60);
-        strafe(.5, -12);
-        place(5);
-        strafe(.5, 12);*/
-        if(x.equals("LEFT")){
-            telemetry.addData("Analysis", 1);
-            telemetry.update();
-            //One Park
-            move(.75, 48);
+        if(//left){
+            strafe(.5, -7.5);
+            move(.75, -24);
+            strafe(.5,-24);
+            linePlace();
+            //backup
+            //board place
+            //strafe to park
         }
-        else if(x.equals("CENTER")){
-            telemetry.addData("Analysis", 2);
-            telemetry.update();
-            //Two Park
-            move(.75, 22);
+        else if(//center){
+            //strafe
+            //rotate
+            //move
+            //line place
+            //rotate
+            //backup
+            //board place
+            //stafe
         }
-        else if(x.equals("RIGHT")){
-            telemetry.addData("Analysis", 3);
-            telemetry.update();
-            //Three Park
-            move(.75,2);
+        else if(//right){
+            //strafe
+            //move forward
+            //line place
+            //backup
+            //board place
+            //strafe
+
         }
 //*/
     }
-    
+
+//Game Specific Methods
+    public void linePlace(){
+        intake.setPower(-.25);
+        sleep(1000);
+        intake.setPower(0);
+    }
+
+    public void boardPlace(int dist){
+        //tick count of up pos
+        int x = 1800;
+        linearSlideLeft.setPower(0);
+        linearSlideRight.setPower(0);
+        linearSlideLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        linearSlideRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        linearSlideLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        linearSlideRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        linearSlideLeft.setTargetPosition(x);
+        linearSlideRight.setTargetPosition(x);
+        linearSlideLeft.setPower(.5);
+        linearSlideRight.setPower(.5);
+        move(.25, dist);
+        while (linearSlideLeft.isBusy()) { 
+          sleep(1);
+        }
+        linearSlideLeft.setPower(0);
+        linearSlideRight.setPower(0);
+        //find dump pos
+        bucket.setPosition();
+        strafe(.5, 24);
+
+    }
+
+
+//Movement Methods
     public void move(double speed, double distance) {
         telemetry.addData("start", "move");
         telemetry.update();
@@ -388,37 +370,5 @@ public class BlueBack extends LinearOpMode{
         backRight.setPower(0);
         telemetry.addData("strafe", x);
         telemetry.update();
-    }
-
-    public void place(double distance){
-        linearSlide.setPower(0);
-        linearSlide.setTargetPosition(1890);//find number for up
-        linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        linearSlide.setPower(0.4);
-        telemetry.addData("ticks", linearSlide.getCurrentPosition());
-        telemetry.update();
-        sleep(2000);
-        move(.25, distance);
-        sleep(3000);
-        telemetry.addData("ticks", linearSlide.getCurrentPosition());
-        telemetry.update();
-        linearSlide.setTargetPosition(1790);//find number for up
-        linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        linearSlide.setPower(0.4);
-        probe.setPosition(0);//find number for release
-        sleep(1000);
-        move(1,2);
-        move(1,-2);
-        sleep(2000);
-        linearSlide.setTargetPosition(1890);//find number for up
-        linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        linearSlide.setPower(0.4);
-        telemetry.addData("ticks", linearSlide.getCurrentPosition());
-        telemetry.update();
-        move(.25, -distance);
-        telemetry.addData("ticks", linearSlide.getCurrentPosition());
-        telemetry.update();
-        linearSlide.setTargetPosition(0);//find number for down
-        
     }
 }  
