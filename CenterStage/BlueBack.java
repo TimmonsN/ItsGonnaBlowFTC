@@ -156,6 +156,9 @@ public class BlueBack extends LinearOpMode{
         linearSlideRight.setPower(0);
         //find dump pos
         bucket.setPosition();
+        sleep(2000);
+        //find up pos
+        bucket.setPosition();
         strafe(.5, 24);
 
     }
