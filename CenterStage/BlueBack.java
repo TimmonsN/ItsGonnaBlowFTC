@@ -154,9 +154,10 @@ public class BlueBack extends LinearOpMode{
         
         else {                      //right (drives left)
             strafe(.5, -2);
-            move(.75, -3);
+            move(.75, -5);
             strafe(.5, -32);
             //move(.5, -2);
+
             linePlace();
             boardPlace(-42);
             move(0.25, 1);
@@ -178,10 +179,10 @@ public class BlueBack extends LinearOpMode{
         sleep(750);
         clawOpen.setPosition(clawClosed + 0.2);
         sleep(750);
-        clawOpen.setPosition(clawClosed);
-        telemetry.update();
-        sleep(750);
-        clawLift.setPosition(0.69);
+        //clawOpen.setPosition(clawClosed);
+        // telemetry.update();
+        // sleep(750);
+        // clawLift.setPosition(0.69);
         sleep(1000);
         move(0.25, -5);
         telemetry.update();
