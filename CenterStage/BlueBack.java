@@ -53,7 +53,7 @@ public class BlueBack extends LinearOpMode{
     "prop",
   };
   
-  private static final double clawClosed = 0.68;
+  private static final double clawClosed = 0.045;
 
     @Override
     public void runOpMode()
@@ -129,30 +129,36 @@ public class BlueBack extends LinearOpMode{
             strafe(.5, -27);
             rotate(0);
             linePlace();
-            boardPlace(-23);
-            strafe(.5, 25);
+            strafe(.5, 9);
+            boardPlace(-19);
+            strafe(.5, 23);
         }
         
         else if (sensedPosition == 2) { //center (drives center, duh)
             strafe(.5, -7.5);
             move(0.25, -2);
             rotate(90);
-            move(.75, 20);
+            move(.75, 13);
             rotate(90);
             linePlace();
             strafe(.5, -7);
             rotate(0);
-            boardPlace(-33);
+            move(.75, -10);
+            strafe(.5, -7);
+            rotate(0);
+            boardPlace(-26);
             move(0.25, 1);
             strafe(.5, 23);
         }
         
         
         else {                      //right (drives left)
-            strafe(.5, -40);
-            move(.5, -2);
+            strafe(.5, -2);
+            move(.75, -3);
+            strafe(.5, -32);
+            //move(.5, -2);
             linePlace();
-            boardPlace(-50);
+            boardPlace(-42);
             move(0.25, 1);
             rotate(0);
             strafe(.5, 31);
@@ -166,8 +172,9 @@ public class BlueBack extends LinearOpMode{
 
 //Game Specific Methods
     public void linePlace(){
-        move(0.25, -1);
-        clawLift.setPosition(0.45);
+        move(0.25, 10);
+        move(.25, -5);
+        clawLift.setPosition(0.4);
         sleep(750);
         clawOpen.setPosition(clawClosed + 0.2);
         sleep(750);
@@ -176,7 +183,7 @@ public class BlueBack extends LinearOpMode{
         sleep(750);
         clawLift.setPosition(0.69);
         sleep(1000);
-        move(0.25, 1);
+        move(0.25, -5);
         telemetry.update();
     }
 
@@ -203,8 +210,8 @@ public class BlueBack extends LinearOpMode{
         }
         slideLeft.setPower(0);
         slideRight.setPower(0);
-        bucket.setPosition(0.4);
-        sleep(500);
+        bucket.setPosition(0.35);
+        sleep(1000);
         telemetry.update();
         slideLeft.setPower(-.8);
         slideRight.setPower(-.8);
@@ -215,7 +222,7 @@ public class BlueBack extends LinearOpMode{
         //find dump pos
         slideLeft.setPower(0);
         slideRight.setPower(0);
-        bucket.setPosition(.76);
+        bucket.setPosition(.8);
         sleep(2000);
         //find up pos
         bucket.setPosition(.53);
@@ -226,7 +233,7 @@ public class BlueBack extends LinearOpMode{
         slideLeft.setPower(0);
         slideRight.setPower(0);
         strafe(.5, 3);
-
+        move(.5,3);
     }
 
 
