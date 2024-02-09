@@ -157,9 +157,11 @@ public class BlueBack extends LinearOpMode{
             move(.75, -5);
             strafe(.5, -32);
             //move(.5, -2);
-
             linePlace();
-            boardPlace(-42);
+            rotate(0);
+            move(.5, -5);
+            strafe(.5, -4);
+            boardPlace(-37);
             move(0.25, 1);
             rotate(0);
             strafe(.5, 31);
@@ -190,7 +192,7 @@ public class BlueBack extends LinearOpMode{
 
     public void boardPlace(int dist){
         //tick count of up pos
-        int heightTotal = -1500;
+        int heightTotal = -1400;
         int height = -900;
         telemetry.addData("right slide", slideRight.getPower());
         telemetry.addData("left slide", slideLeft.getPower());
