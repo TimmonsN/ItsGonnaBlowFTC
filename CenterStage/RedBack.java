@@ -122,14 +122,16 @@ public class RedBack extends LinearOpMode{
         clawOpen.setPosition(clawClosed - 0.01);
        // move(0.5, 15);
        
-      if (sensedPosition == 3) { //left (drives right)
+      if (sensedPosition == 3) { //right
             strafe(.5, -5);
             rotate(180);
-            move(.75, -25);
-            strafe(.5, -27);
+            rotate(180);
+            move(.75, -31);
+            strafe(.5, 27);
             rotate(180);
             linePlace();
-            boardPlace(-23);
+            strafe(.25, -11);
+            boardPlace(-21);
             strafe(.5, -25);
         }
         
@@ -137,24 +139,26 @@ public class RedBack extends LinearOpMode{
             strafe(.5, -7.5);
             move(0.25, 2);
             rotate(90);
-            move(.75, 20);
+            move(.75, 18);
             rotate(90);
             linePlace();
             move(.5,-2);
             rotate(180);
-            strafe(.5,-7);
-            boardPlace(-40);
+            boardPlace(-44);
             move(0.25, 1);
             strafe(.5, -23);
         }
         
         
-        else {                      //right (drives left)
-            strafe(.5, -40);
-            move(.5, -2);
+        else {                      //left
+            strafe(.5, -32);
+            move(.5, 8);
+            rotate(180);
             rotate(180);
             linePlace();
-            boardPlace(-50);
+            rotate(180);
+            strafe(.25, 4);
+            boardPlace(-51);
             move(0.25, 1);
             rotate(180);
             strafe(.5, -31);
@@ -168,23 +172,24 @@ public class RedBack extends LinearOpMode{
 
 //Game Specific Methods
     public void linePlace(){
-        move(0.25, -1);
-        clawLift.setPosition(0.45);
+        move(0.25, 10);
+        move(.25, -5);
+        clawLift.setPosition(0.4);
         sleep(750);
         clawOpen.setPosition(clawClosed + 0.2);
         sleep(750);
-        clawOpen.setPosition(clawClosed);
-        telemetry.update();
-        sleep(750);
-        clawLift.setPosition(0.69);
+        //clawOpen.setPosition(clawClosed);
+        // telemetry.update();
+        // sleep(750);
+        // clawLift.setPosition(0.69);
         sleep(1000);
-        move(0.25, 1);
+        move(0.25, -5);
         telemetry.update();
     }
 
     public void boardPlace(int dist){
         //tick count of up pos
-        int heightTotal = -1600;
+        int heightTotal = -1350;
         int height = -900;
         telemetry.addData("right slide", slideRight.getPower());
         telemetry.addData("left slide", slideLeft.getPower());
@@ -195,6 +200,7 @@ public class RedBack extends LinearOpMode{
         slideLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         slideRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         move(.25, dist);
+        move(.25, 2);
         rotate(180);
         slideLeft.setPower(-.8);
         slideRight.setPower(-.8);
@@ -204,8 +210,8 @@ public class RedBack extends LinearOpMode{
         }
         slideLeft.setPower(0);
         slideRight.setPower(0);
-        bucket.setPosition(0.4);
-        sleep(500);
+        bucket.setPosition(0.35);
+        sleep(1000);
         telemetry.update();
         slideLeft.setPower(-.8);
         slideRight.setPower(-.8);
@@ -216,9 +222,17 @@ public class RedBack extends LinearOpMode{
         //find dump pos
         slideLeft.setPower(0);
         slideRight.setPower(0);
-        bucket.setPosition(.76);
+        bucket.setPosition(.8);
         sleep(2000);
         //find up pos
+        slideLeft.setPower(-.8);
+        slideRight.setPower(-.8);
+         while (slideLeft.getCurrentPosition() > heightTotal) { 
+          sleep(1);
+          telemetry.update();
+        }
+        slideLeft.setPower(0);
+        slideRight.setPower(0);
         bucket.setPosition(.53);
         sleep(1500);
         slideLeft.setPower(0.8);
@@ -227,7 +241,7 @@ public class RedBack extends LinearOpMode{
         slideLeft.setPower(0);
         slideRight.setPower(0);
         strafe(.5, -3);
-
+        move(.5,3);
     }
 
 

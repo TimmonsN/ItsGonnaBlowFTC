@@ -31,7 +31,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 @Autonomous
 
-public class BlueFront extends LinearOpMode{
+public class RedFront extends LinearOpMode{
   private DcMotor frontLeft;
   private DcMotor backRight;
   private DcMotor frontRight;
@@ -47,13 +47,13 @@ public class BlueFront extends LinearOpMode{
   private TfodProcessor tfod;
   private VisionPortal visionPortal;
   private int sensedPosition = 2;
-  private static final String TFOD_MODEL_FILE = "blue1.tflite";
+  private static final String TFOD_MODEL_FILE = "red2.tflite";
     // Define the labels recognized in the model for TFOD (must be in training order!)
   private static final String[] LABELS = {
     "prop",
   };
   
-  private static final double clawClosed = 0.045;
+  private static final double clawClosed = 0.54;
 
     @Override
     public void runOpMode()
@@ -120,31 +120,31 @@ public class BlueFront extends LinearOpMode{
         bucket.setPosition(.5);
         clawLift.setPosition(.69);
         clawOpen.setPosition(clawClosed - 0.01);
-        strafe(0.5, -2);
-        move(0.5, 3);
        // move(0.5, 15);
        
-      if (sensedPosition == 1) { //left (drives right)
-            move(.75, 5);
-            strafe(.5, -32);
-            rotate(170);
-            //move(.5, -2);
+      if (sensedPosition == 3) { //right
+            strafe(.5, -5);
+            move(.75, -10);
+            strafe(.5, 12);
+            move(.75,5);
             linePlace();
         }
         
         else if (sensedPosition == 2) { //center (drives center, duh)
             strafe(.5, -7.5);
-            move(0.25, -2);
             rotate(90);
-            move(.75, 13);
-            rotate(90);
+            move(.75, 12);
             linePlace();
         }
         
         
-        else {                      //right (drives left)
-            strafe(.5, -32);
-            move(.5, -8);
+        else {                      //left
+            strafe(.5, -5);
+            move(.75, -10);
+            strafe(.5, 12);
+            rotate(180);
+            rotate(180);
+            move(.75,5);
             linePlace();
         }
 
@@ -173,7 +173,7 @@ public class BlueFront extends LinearOpMode{
 
     public void boardPlace(int dist){
         //tick count of up pos
-        int heightTotal = -1400;
+        int heightTotal = -1350;
         int height = -900;
         telemetry.addData("right slide", slideRight.getPower());
         telemetry.addData("left slide", slideLeft.getPower());
@@ -185,7 +185,7 @@ public class BlueFront extends LinearOpMode{
         slideRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         move(.25, dist);
         move(.25, 2);
-        rotate(0);
+        rotate(180);
         slideLeft.setPower(-.8);
         slideRight.setPower(-.8);
         while (slideLeft.getCurrentPosition() > height) { 
@@ -209,6 +209,14 @@ public class BlueFront extends LinearOpMode{
         bucket.setPosition(.8);
         sleep(2000);
         //find up pos
+        slideLeft.setPower(-.8);
+        slideRight.setPower(-.8);
+         while (slideLeft.getCurrentPosition() > heightTotal) { 
+          sleep(1);
+          telemetry.update();
+        }
+        slideLeft.setPower(0);
+        slideRight.setPower(0);
         bucket.setPosition(.53);
         sleep(1500);
         slideLeft.setPower(0.8);
@@ -216,7 +224,7 @@ public class BlueFront extends LinearOpMode{
         sleep(450);
         slideLeft.setPower(0);
         slideRight.setPower(0);
-        strafe(.5, 3);
+        strafe(.5, -3);
         move(.5,3);
     }
 
@@ -502,7 +510,7 @@ public class BlueFront extends LinearOpMode{
         for (Recognition recognition : currentRecognitions) {
             double x = (recognition.getLeft() + recognition.getRight()) / 2 ;
             double y = (recognition.getTop()  + recognition.getBottom()) / 2 ;
-            if (recognition.getConfidence() > mostConfident) {
+            if (recognition.getConfidence() > 0) {
                 mostConfident = recognition.getConfidence();
                 bestX = x;
                 bestY = y;
